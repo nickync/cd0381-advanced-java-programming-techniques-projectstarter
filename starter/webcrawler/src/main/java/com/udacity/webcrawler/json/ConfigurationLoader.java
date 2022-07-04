@@ -33,7 +33,7 @@ public final class ConfigurationLoader {
     try (Reader reader = Files.newBufferedReader(path)) {
       return read(reader);
     } catch (IOException err) {
-      err.getLocalizedMessage();
+      err.printStackTrace();
       return null;
     }
   }
@@ -51,7 +51,14 @@ public final class ConfigurationLoader {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
 
-    return objectMapper.readValue(reader, CrawlerConfiguration.Builder.class).build();
+    try {
+      CrawlerConfiguration config;
+      config = objectMapper.readValue(reader, CrawlerConfiguration.Builder.class).build();
+      return config;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return null;
+    }
     //return new CrawlerConfiguration.Builder().build();
   }
 }
